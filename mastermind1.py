@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Playing a little with MASTERMIND game
+# Solving & playing MASTERMIND game
 #
 # Combination are represented as char string. The char # is reserved.
 #
@@ -10,15 +10,6 @@ import random
 class Combination:
     """
     Class representing a combination
-    
-    to be tested with :
-    
-    1234 == 1234 => (4,0)
-    1234 == 4321 => (0,4)
-    1234 == 1242 => (2,1)
-    1122 == 2111 => (1,2)
-    1112 == 2221 => (0,2)
-    3130 == 3120 => (3,0)
     """
 
     def __init__(self, comb="1234"):
@@ -38,13 +29,13 @@ class Combination:
         rcrp = 0
         rcbp = 0
         iterm = self.iter.copy()
-        # first we have to count "right color right place"
+        # first we have to count rcrp:"right color right place"
         for i in self.iter:
             if self[i] == prop[i]:
                 iterm.remove(i) # we should not check anymore at rcrp places
                 rcrp += 1
 #                print((rcrp,rcbp,prop.comb,i))
-        # then we look at "right color bad place"
+        # then we look at rcbp:"right color bad place"
         for i in iterm:
             for j in iterm:
                 if self[i] == prop[j]:
@@ -75,10 +66,4 @@ class Game:
         self.n = len(root)
         self.duplicates=duplicates
         self.trace = []
-
-        
-    
-            
-
-
 
