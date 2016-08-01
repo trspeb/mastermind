@@ -24,7 +24,8 @@ class Combination:
         self.comb = self.comb[:key] + val + self.comb[key+1:]
         
     def __eq__(self, prop):
-        assert prop.len==self.len
+        assert prop.len == self.len
+        assert prop.len > 0
         
         rcrp = 0
         rcbp = 0
