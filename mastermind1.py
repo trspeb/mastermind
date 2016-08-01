@@ -50,10 +50,14 @@ class RandomCombination(Combination):
     """
     Random combination class
     """
+    keys = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    len_keys = len(keys)
+    
     def __init__(self, n=4, c=6):
+        assert c < self.len_keys
         comb = ""
         for i in range(n):
-            comb += str(random.randint(0,c-1))
+            comb += self.keys[random.randint(0,c-1)]
         print(comb)
         super().__init__(comb)
         
