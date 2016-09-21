@@ -45,6 +45,9 @@ class Combination:
 #                    print((rcrp,rcbp,prop.comb,i,j))
                     break
         return(rcrp, rcbp)
+        
+    def __repr__(self):
+        return(self.comb)
 
 class RandomCombination(Combination):
     """
@@ -58,17 +61,63 @@ class RandomCombination(Combination):
         comb = ""
         for i in range(n):
             comb += self.keys[random.randint(0,c-1)]
-        print(comb)
+#        print(comb)
         super().__init__(comb)
         
+class AIdumb:
+    """
+    Class implementing an automatic player, paying randomly without memory
+    """        
+    def __init__(self, game, silent=False):
+        self.game = game
+        
+    def play(self):
+        notwon = True
+        i = 0
+        while notwon:
+            newtry = RandomCombination(n = self.game.n, c = self.game.c)
+            rep = self.game.propose(newtry)
+            notwon = (self.game.trace[-1][1][0] != 4)
+            i = i+1
+            print("{0} - {1}".format(i, rep))
+
+class AInext:
+    """
+    Class implementing an methodic player, playong the next available combo
+    """
+    
+    def __init__(self, game, silent=False):
+        self.game = game
+        
+    def play(self):
+        notwon = True
+        i = 0
+        while notwon:
+            if (i==0):
+                newtry = Combination("1"*self.game.n)
+            else:
+                # roll, brute force ?
+                # find the next available combo !
+                # recursively ??
+                pass
+            rep = self.game.propose(newtry)
+            notwon = (self.game.trace[-1][1][0] != 4)
+            i = i+1
+            print("{0} - {1}".format(i, rep))
+
 class Game:
     """
     Class representing a Game
     """
 
-    def __init__(self, root="1234", n=4, duplicates=False):
+    def __init__(self, root=Combination("1234"), c=6, duplicates=False):
         self.root = root
-        self.n = len(root)
+        self.n = root.len
+        self.c = c
         self.duplicates=duplicates
         self.trace = []
-
+        
+    def propose(self, combination):
+        self.trace.append((combination, self.root == combination))
+        return(self.trace[-1])
+    
