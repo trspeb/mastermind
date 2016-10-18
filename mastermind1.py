@@ -5,6 +5,7 @@
 # Combination are represented as char string. The char # is reserved.
 #
 # @todo base Wouldn't it be easier to implement in int, through base calculation ?
+#
 
 import random
 
@@ -149,6 +150,12 @@ class AInext:
             notwon = (self.game.trace[-1][1][0] != 4)
             i = i+1
             print("{0} - {1}".format(i, rep))
+            
+    def available(self, comb):
+        """
+        Tell me if this combination is available, from past master answers
+        """
+        pass
 
 class Game:
     """
