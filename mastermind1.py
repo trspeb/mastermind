@@ -4,6 +4,7 @@
 #
 # Combination are represented as char string. The char # is reserved.
 #
+# @todo base Wouldn't it be easier to implement in int, through base calculation ?
 
 import random
 
@@ -11,6 +12,8 @@ class Combination:
     """
     Class representing a combination
     """
+    keys = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    len_keys = len(keys)
 
     def __init__(self, comb="1234"):
         self.comb = comb
@@ -23,10 +26,11 @@ class Combination:
     def __setitem__(self, key, val):
         self.comb = self.comb[:key] + val + self.comb[key+1:]
         
-    def __eq__(self, prop):
-        assert prop.len == self.len
-        assert prop.len > 0
+    def __eq__(self, propc):
+        assert propc.len == self.len
+        assert propc.len > 0
         
+        prop = Combination(propc.comb)
         rcrp = 0
         rcbp = 0
         iterm = self.iter.copy()
@@ -48,14 +52,27 @@ class Combination:
         
     def __repr__(self):
         return(self.comb)
+        
+    def next(self, n, c):
+        """
+        Look at the "next" combination, knowing "color base" and digit number
+        """
+        i = 0
+        temp = self.comb
+        while (i < n):
+            j = self.keys.find(temp[i])
+            if (j < c):
+                temp = temp[:i] + self.keys[j+1] + temp[(i+1):]
+                return(Combination(temp))
+            else:
+                temp = temp[:i] + self.keys[0] + temp[(i+1):]
+                i = i + 1
+        return(Combination("1"*n))
 
 class RandomCombination(Combination):
     """
     Random combination class
-    """
-    keys = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    len_keys = len(keys)
-    
+    """    
     def __init__(self, n=4, c=6):
         assert c < self.len_keys
         comb = ""
@@ -71,11 +88,37 @@ class AIdumb:
     def __init__(self, game, silent=False):
         self.game = game
         
-    def play(self):
+    def play(self, max = 1e6):
         notwon = True
         i = 0
-        while notwon:
+        while (notwon & (i<max)):
             newtry = RandomCombination(n = self.game.n, c = self.game.c)
+            rep = self.game.propose(newtry)
+            notwon = (self.game.trace[-1][1][0] != 4)
+            i = i+1
+            print("{0} - {1}".format(i, rep))
+
+class AIdumbnext:
+    """
+    Class implementing an methodic dumb player, playong the next combo
+    """
+    
+    def __init__(self, game, silent=False):
+        self.game = game
+        
+    def play(self, max = 1e6):
+        notwon = True
+        i = 0
+        while (notwon & (i<max)):
+            if (i==0):
+                newtry = Combination("1"*self.game.n)
+            else:
+                # roll, brute force ?
+                # find the next available combo !
+                # recursively ??
+                # would be more rational to build a ruleset ?
+                newtry = self.game.trace[-1][0].next(self.game.n, self.game.c)
+                pass
             rep = self.game.propose(newtry)
             notwon = (self.game.trace[-1][1][0] != 4)
             i = i+1
@@ -83,22 +126,24 @@ class AIdumb:
 
 class AInext:
     """
-    Class implementing an methodic player, playong the next available combo
+    Class implementing an methodic dumb player, playong the next available combo
     """
     
     def __init__(self, game, silent=False):
         self.game = game
         
-    def play(self):
+    def play(self, max = 1e6):
         notwon = True
         i = 0
-        while notwon:
+        while (notwon & (i<max)):
             if (i==0):
                 newtry = Combination("1"*self.game.n)
             else:
                 # roll, brute force ?
                 # find the next available combo !
                 # recursively ??
+                # would be more rational to build a ruleset ?
+                newtry = self.game.trace[-1][0].next(self.game.n, self.game.c)
                 pass
             rep = self.game.propose(newtry)
             notwon = (self.game.trace[-1][1][0] != 4)
