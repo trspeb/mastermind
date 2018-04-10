@@ -2,6 +2,9 @@
 
 # unit testing of mastermind1.py
 
+# todo write Combination.next unit test
+# todo write AINext.available unit test
+
 import mastermind1 as ma
 import unittest
 
